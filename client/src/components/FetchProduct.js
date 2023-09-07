@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 function ProductDetails() {
   const [url, setUrl] = useState('');
   const [productDetails, setProductDetails] = useState(null);
+  const [loading, setLoading] = useState('');
 
   const fetchProductDetails = async () => {
     try {
+      setLoading('Loading...');
       const response = await fetch('http://localhost:5000/product_details', {
         method: 'POST',
         headers: {
@@ -17,9 +19,10 @@ function ProductDetails() {
       if (!response.ok) {
         throw new Error('Request failed');
       }
-
+      
       const data = await response.json();
       setProductDetails(data);
+      setLoading('');
     } catch (error) {
       console.error(error);
     }
@@ -34,6 +37,7 @@ function ProductDetails() {
         onChange={(e) => setUrl(e.target.value)}
       />
       <button onClick={fetchProductDetails}>Fetch Details</button>
+      {loading && <p>{loading}</p>}
       {productDetails && (
         <div>
           <p>{productDetails.title}</p>
